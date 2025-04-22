@@ -10,13 +10,14 @@ log = logging.getLogger(__name__)
 
 class WebDriver:
     _instance = None
+    _driver = None
 
     def __new__(cls):
         if cls._instance is None:
             try:
                 log.debug('Creating new WebDriver instance...')
-                cls._instance = super(WebDriver, cls).__new__(cls)
-                cls._instance.driver = cls._initialize_driver()
+                cls._instance = super().__new__(cls)
+                cls._driver = cls._initialize_driver()
             except Exception as e:
                 log.exception('WebDriver initialization error')
                 raise RuntimeError(f'Error creating driver: {e}')
@@ -49,21 +50,19 @@ class WebDriver:
 
     @classmethod
     def get_driver(cls):
-        if cls._instance is None:
-            cls()
-        if cls._instance is None or not hasattr(cls._instance, "driver"):
+        if cls._driver is None:
             log.error("Driver not initialized. Please ensure proper initialization")
             raise RuntimeError('Driver not initialized')
-
-        return cls._instance.driver
+        return cls._driver
 
     @classmethod
     def quit_driver(cls):
-        if cls._instance and hasattr(cls._instance, "driver"):
+        if cls._driver:
             try:
                 log.debug('Quitting the browser...')
-                cls._instance.driver.quit()
+                cls._driver.quit()
                 cls._instance = None
+                cls._driver = None
                 log.info('Browser closed')
             except WebDriverException as e:
                 log.error(f'Failed to quit the WebDriver cleanly\n{e}')
