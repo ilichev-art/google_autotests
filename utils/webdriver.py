@@ -49,10 +49,13 @@ class WebDriver:
 
     @classmethod
     def get_driver(cls):
-        if cls().driver is None:
+        if cls._instance is None:
+            cls()
+        if cls._instance is None or not hasattr(cls._instance, "driver"):
             log.error("Driver not initialized. Please ensure proper initialization")
             raise RuntimeError('Driver not initialized')
-        return cls().driver
+
+        return cls._instance.driver
 
     @classmethod
     def quit_driver(cls):
