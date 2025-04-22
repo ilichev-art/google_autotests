@@ -44,9 +44,6 @@ class WebDriver:
         except WebDriverException as e:
             log.error(f'Failed to initialize WebDriver\n{e}')
             raise RuntimeError(f'Failed to initialize WebDriver. {e}')
-        except Exception as e:
-            log.error(f'An error occurred while configuring the driver: {e}')
-            raise Exception(f'WebDriver configuration failed. {e}')
 
     @classmethod
     def get_driver(cls):
@@ -64,8 +61,6 @@ class WebDriver:
                 cls._instance = None
                 cls._driver = None
                 log.info('Browser closed')
-            except WebDriverException as e:
-                log.error(f'Failed to quit the WebDriver cleanly\n{e}')
             except Exception as e:
                 log.error(f'An unexpected error occurred during WebDriver teardown\n{e}')
                 raise Exception(f'An unexpected error occurred during WebDriver teardown. {e}')
