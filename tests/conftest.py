@@ -2,8 +2,8 @@ import pytest
 from utils.webdriver import WebDriver
 
 
-@pytest.fixture(scope="session", autouse=True)
-def setup_teardown():
+@pytest.fixture(scope="session")
+def driver():
     WebDriver()
     yield WebDriver.get_driver()
     WebDriver.quit_driver()

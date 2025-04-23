@@ -2,8 +2,7 @@ from utils.webdriver import WebDriver
 from entities.pages.google_page import GooglePage
 
 
-def test_google_search():
-    driver = WebDriver.get_driver()
+def test_google_search(driver):
     page = GooglePage(driver)
 
     page.open_site() \
