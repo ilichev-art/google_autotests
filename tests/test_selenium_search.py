@@ -1,4 +1,3 @@
-from utils.webdriver import WebDriver
 from entities.pages.google_page import GooglePage
 
 
