@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 
 from selenium import webdriver
@@ -9,10 +11,10 @@ log = logging.getLogger(__name__)
 
 
 class WebDriver:
-    _instance = None
-    _driver = None
+    _instance: WebDriver | None = None
+    _driver: webdriver.Chrome | None = None
 
-    def __new__(cls):
+    def __new__(cls) -> WebDriver:
         if cls._instance is None:
             try:
                 log.debug('Creating new WebDriver instance...')
@@ -20,11 +22,11 @@ class WebDriver:
                 cls._driver = cls._initialize_driver()
             except Exception as e:
                 log.exception('WebDriver initialization error')
-                raise RuntimeError(f'Error creating driver: {e}')
+                raise RuntimeError(f'Error creating driver: {e}') from e
         return cls._instance
 
     @staticmethod
-    def _initialize_driver():
+    def _initialize_driver() -> webdriver.Chrome:
         try:
             log.debug('Setting ChromeOptions...')
             options = webdriver.ChromeOptions()
@@ -43,10 +45,10 @@ class WebDriver:
             return driver
         except WebDriverException as e:
             log.error(f'Failed to initialize WebDriver\n{e}')
-            raise RuntimeError(f'Failed to initialize WebDriver. {e}')
+            raise RuntimeError(f'Failed to initialize WebDriver. {e}') from e
 
     @classmethod
-    def get_driver(cls):
+    def get_driver(cls) -> webdriver.Chrome:
         if cls._driver is None:
             log.error("Driver not initialized. Please ensure proper initialization")
             raise RuntimeError('Driver not initialized')
@@ -63,4 +65,4 @@ class WebDriver:
                 log.info('Browser closed')
             except Exception as e:
                 log.error(f'An unexpected error occurred during WebDriver teardown\n{e}')
-                raise Exception(f'An unexpected error occurred during WebDriver teardown. {e}')
+                raise Exception(f'An unexpected error occurred during WebDriver teardown. {e}') from e
