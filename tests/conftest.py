@@ -1,9 +1,9 @@
 import pytest
-from utils.webdriver import WebDriver
+from utils.webdriversingleton import WebDriverSingleton
 
 
 @pytest.fixture(scope="session")
 def driver():
-    WebDriver()
-    yield WebDriver.get_driver()
-    WebDriver.quit_driver()
+    WebDriverSingleton()
+    yield WebDriverSingleton.get_driver()
+    WebDriverSingleton.quit_driver()

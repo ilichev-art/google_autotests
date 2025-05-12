@@ -1,23 +1,27 @@
-from selenium.webdriver.common.by import By
+from __future__ import annotations
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from entities.base_page import BasePage
+import logging
+from config import BASE_URL
+
+log = logging.getLogger(__name__)
 
 
-class GooglePage:
-    def __init__(self, driver):
-        self.driver = driver
-        self.search_box = (By.NAME, "q")
+class GooglePage(BasePage):
+    _container = (By.NAME, "q")
+
+    def assert_loaded(self, **kwargs) -> GooglePage:
+        log.info('Assert Google Page loaded')
+        return super().assert_loaded(self._container)
 
     def open_site(self):
-        self.driver.get("https://www.google.com")
-        return self
+        return self.open(BASE_URL)
 
-    def search(self, query):
-        search_input = self.driver.find_element(*self.search_box)
-        search_input.send_keys(query + Keys.RETURN)
-        WebDriverWait(self.driver, 10).until(EC.title_contains(query))
-        return self
+    def search(self, query: str):
+        self.type_text(self._container, query)
+        self.find(self._container).send_keys(Keys.RETURN)
+        return self.wait_for_title(query)
 
-    def title(self):
+    def title(self) -> str:
         return self.driver.title

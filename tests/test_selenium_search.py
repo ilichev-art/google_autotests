@@ -2,8 +2,8 @@ from entities.pages.google_page import GooglePage
 
 
 def test_google_search(driver):
-    page = GooglePage(driver)
-
+    page = GooglePage()
     page.open_site() \
-        .search('Selenium')
-    assert "Selenium" in page.title(), "Результаты поиска не соответствуют запросу"
+        .assert_loaded() \
+        .search("Selenium")
+    assert "Selenium" in page.title()

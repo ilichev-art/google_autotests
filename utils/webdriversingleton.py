@@ -10,11 +10,11 @@ from webdriver_manager.chrome import ChromeDriverManager
 log = logging.getLogger(__name__)
 
 
-class WebDriver:
-    _instance: WebDriver | None = None
+class WebDriverSingleton:
+    _instance: WebDriverSingleton | None = None
     _driver: webdriver.Chrome | None = None
 
-    def __new__(cls) -> WebDriver:
+    def __new__(cls) -> WebDriverSingleton:
         if cls._instance is None:
             try:
                 log.debug('Creating new WebDriver instance...')
@@ -66,3 +66,9 @@ class WebDriver:
             except Exception as e:
                 log.error(f'An unexpected error occurred during WebDriver teardown\n{e}')
                 raise Exception(f'An unexpected error occurred during WebDriver teardown. {e}') from e
+
+    @classmethod
+    def restart_driver(cls):
+        log.debug('Restarting the browser...')
+        cls.quit_driver()
+        cls._initialize_driver()
